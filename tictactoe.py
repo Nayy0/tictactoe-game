@@ -1,20 +1,13 @@
-# Compléter ici (noms, groupe, contenu fichier, date)
-#Benessalah Nayssam
-#MI21
-#
-#
-# Ne pas supprimer cette ligne. <trace>tictactoe.py</trace>
 
 
 ####################
-# Jeu du Tic Tac Toe
+#  Tic Tac Toe game
 ####################
 
-#Initialisation du jeu
-
+#print the grid with symbols
 def affiche_grille(grille:list[str])->None:
     """
-    Précondition : len(grille)==9
+    Precondition : lenght of grille is 9
     """
     
     print(" "+grille[0]+" | "+grille[1]+" | "+grille[2]+ " ")
@@ -23,13 +16,9 @@ def affiche_grille(grille:list[str])->None:
     print("---+---+---")
     print(" "+grille[6]+" | "+grille[7]+" | "+grille[8]+ " ")
 
+#print a numbered grid
 def affiche_grille_numerote()->None:
-    """ à_remplacer_par_ce_que_fait_la_fonction
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     print("Les positions sont numérotées ainsi :")
     print(" 1 | 2 | 3 ")
     print("---+---+---")
@@ -37,13 +26,12 @@ def affiche_grille_numerote()->None:
     print("---+---+---")
     print(" 7 | 8 | 9 ")
 
-#Verification de victoire
+#return True if 3 symboles are aligned in the grid
 def est_gagne(grille, symbole)->bool:
-    """ Renvoie True ssi 3 symboles sont aligné dans la grille
-
-    Précondition : len(grille)==9
+    """ 
+    Precondition : lenght of grille is 9
     symbole est "X" ou "O"
-    Exemple(s) :
+    Examples :
     $$$ est_gagne(["X","X","X","O"," ","O"," ","O"," "],"X")
     True
     $$$ est_gagne(["X","O","O","X","X","X","O","O","X"],"X")
@@ -68,14 +56,9 @@ def est_gagne(grille, symbole)->bool:
     return comb<len(combinaisons)
     
 
-#Fonction de saisie des pseudos
+#input the name of the players and return a tuple
 def saisie_pseudo()->tuple[str,str]:
-    """ à_remplacer_par_ce_que_fait_la_fonction
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     joueur_x=input("Entrez le pseudo du joueur X : ")
     joueur_o=input("Entrez le pseudo du joueur O : ")
     while joueur_x == joueur_o:
@@ -83,36 +66,24 @@ def saisie_pseudo()->tuple[str,str]:
         joueur_o=input("Entrez le pseudo du joueur O: ")
     return (joueur_x,joueur_o)
 
-#Fonction de saisie des choix
+#input function of the choice
 def saisie_choix(joueur_courant,symbole_courant)->str:
     return input(joueur_courant+" ("+symbole_courant+")"+" choisissez une case (1-9) : ")    
-            
-def est_valide(choix:str)->bool:
-    """ renvoie True ssi le choix est valide
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
+#return True if the choice is valid
+def est_valide(choix:str)->bool:
+    
+
     return choix.isdigit() and int(choix)>=1 and int(choix)<=9
         
+#return True if the square is empty
 def est_libre(grille:list[str],position:int):
-    """ renvoi True ssi la case n'est pas prise
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     return grille[position]==" "
 
-
+#place the symbole of the player in the grid
 def place_choix(joueur_courant,symbole_courant,grille):
-    """ à_remplacer_par_ce_que_fait_la_fonction
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     choix=saisie_choix(joueur_courant,symbole_courant)
     
     while not est_valide(choix):
@@ -128,22 +99,13 @@ def place_choix(joueur_courant,symbole_courant,grille):
     
     grille[position]=symbole_courant
 
+#return True if the game is a draw
 def egalite(grille, symbole):
-    """ à_remplacer_par_ce_que_fait_la_fonction
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     return (" " not in grille) and not est_gagne(grille,symbole)
 
+#Changes the current player. Returns void
 def change_joueur(symbole_courant :str, joueur_o:str,joueur_x:str)->tuple[str]:
-    """ Fait le changement de joueur sans rien retourner
-
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     if symbole_courant=="X":
         symbole_courant="O"
         joueur_courant=joueur_o
@@ -152,26 +114,20 @@ def change_joueur(symbole_courant :str, joueur_o:str,joueur_x:str)->tuple[str]:
         joueur_courant=joueur_x
     return (joueur_courant,symbole_courant)
 
+#print a win message
 def affiche_victoire(joueur_courant:str,grille:list[str])->None:
-    """ Affiche le message de victoire
+    
 
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
     affiche_grille(grille)
     print("Félicitations, "+joueur_courant+" a remporté la partie !")
 
+#print a draw message
 def affiche_egalite(grille:list[str])->None:
-    """ Affiche le message d'égalité
-
-    Précondition : 
-    Exemple(s) :
-    $$$ 
-    """
+    
     affiche_grille(grille)
     print("Egalité! Il n'y a plus de case")
 
+#the main function
 def main()->None:
     grille=[" "]*9
     symbole_courant="X"
