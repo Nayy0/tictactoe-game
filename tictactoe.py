@@ -5,16 +5,16 @@
 ####################
 
 #print the grid with symbols
-def print_grid(grille:list[str])->None:
+def print_grid(grid:list[str])->None:
     """
-    Precondition : lenght of grille is 9
+    Precondition : lenght of grid is 9
     """
     
-    print(" "+grille[0]+" | "+grille[1]+" | "+grille[2]+ " ")
+    print(" "+grid[0]+" | "+grid[1]+" | "+grid[2]+ " ")
     print("---+---+---")
-    print(" "+grille[3]+" | "+grille[4]+" | "+grille[5]+ " ")
+    print(" "+grid[3]+" | "+grid[4]+" | "+grid[5]+ " ")
     print("---+---+---")
-    print(" "+grille[6]+" | "+grille[7]+" | "+grille[8]+ " ")
+    print(" "+grid[6]+" | "+grid[7]+" | "+grid[8]+ " ")
 
 #print a numbered grid
 def print_grid_numbered()->None:
@@ -27,9 +27,9 @@ def print_grid_numbered()->None:
     print(" 7 | 8 | 9 ")
 
 #return True if 3 symboles are aligned in the grid
-def is_won(grille, symbole)->bool:
+def is_won(grid, symbole)->bool:
     """ 
-    Precondition : lenght of grille is 9
+    Precondition : lenght of grid is 9
     symbole est "X" ou "O"
     Examples :
     $$$ is_won(["X","X","X","O"," ","O"," ","O"," "],"X")
@@ -51,7 +51,7 @@ def is_won(grille, symbole)->bool:
                   , [2, 5, 8], [0, 4, 8], [2, 4, 6]]
     
     comb = 0
-    while comb<len(combinaisons) and not (grille[combinaisons[comb][0]]==grille[combinaisons[comb][1]]==grille[combinaisons[comb][2]]==symbole):
+    while comb<len(combinaisons) and not (grid[combinaisons[comb][0]]==grid[combinaisons[comb][1]]==grid[combinaisons[comb][2]]==symbole):
         comb+=1
     return comb<len(combinaisons)
     
@@ -67,45 +67,44 @@ def pseudo_input()->tuple[str,str]:
     return (player_x,player_o)
 
 #input function of the choice
-def saisie_choix(current_player,current_symbol)->str:
-    return input(current_player+" ("+current_symbol+")"+" choisissez une case (1-9) : ")    
+def choice_input(current_player,current_symbol)->str:
+    return input(current_player+" ("+current_symbol+")"+" chose a square (1-9) : ")    
 
 #return True if the choice is valid
-def est_valide(choix:str)->bool:
+def is_valid(choice:str)->bool:
     
-
-    return choix.isdigit() and int(choix)>=1 and int(choix)<=9
+    return choice.isdigit() and int(choice)>=1 and int(choice)<=9
         
 #return True if the square is empty
-def est_libre(grille:list[str],position:int):
+def est_libre(grid:list[str],position:int):
 
-    return grille[position]==" "
+    return grid[position]==" "
 
 #place the symbole of the player in the grid
-def place_choix(current_player,current_symbol,grille):
+def place_choice(current_player,current_symbol,grid):
 
-    choix=saisie_choix(current_player,current_symbol)
+    choice=choice_input(current_player,current_symbol)
     
-    while not est_valide(choix):
-        print("Entrez invalide. Réessayez.")
-        choix=saisie_choix(current_player,current_symbol)
+    while not is_valid(choice):
+        print("Input invalid. Try again.")
+        choice=choice_input(current_player,current_symbol)
     
-    position=int(choix)-1
+    position=int(choice)-1
     
-    while not est_libre(grille,position):
-        print("Case déjà prise. Réessayez.")        
-        choix=saisie_choix(current_player,current_symbol)
-        position=int(choix)-1
+    while not est_libre(grid,position):
+        print("Square already taken. Retry.")        
+        choice=choice_input(current_player,current_symbol)
+        position=int(choice)-1
     
-    grille[position]=current_symbol
+    grid[position]=current_symbol
 
 #return True if the game is a draw
-def egalite(grille, symbole):
+def is_a_draw(grid, symbole):
 
-    return (" " not in grille) and not is_won(grille,symbole)
+    return (" " not in grid) and not is_won(grid,symbole)
 
 #Changes the current player. Returns void
-def change_joueur(current_symbol :str, player_o:str,player_x:str)->tuple[str]:
+def change_current_player(current_symbol :str, player_o:str,player_x:str)->tuple[str]:
     if current_symbol=="X":
         current_symbol="O"
         current_player=player_o
@@ -115,23 +114,23 @@ def change_joueur(current_symbol :str, player_o:str,player_x:str)->tuple[str]:
     return (current_player,current_symbol)
 
 #print a win message
-def affiche_victoire(current_player:str,grille:list[str])->None:
+def print_win_message(current_player:str,grid:list[str])->None:
     
 
-    print_grid(grille)
-    print("Félicitations, "+current_player+" a remporté la partie !")
+    print_grid(grid)
+    print("Congratulations, "+current_player+" won !")
 
 #print a draw message
-def affiche_egalite(grille:list[str])->None:
+def print_draw_message(grid:list[str])->None:
     
-    print_grid(grille)
-    print("Egalité! Il n'y a plus de case")
+    print_grid(grid)
+    print("Draw! No more squares available.")
 
 #the main function
 def main()->None:
 
     # game set up
-    grille=[" "]*9
+    grid=[" "]*9
     current_symbol="X"
     print("Hello, welcome in the Tictactoe game !")
     joueurs=pseudo_input()
@@ -142,17 +141,17 @@ def main()->None:
     print("\n\n")
 
     #main loop of the game
-    while not is_won(grille,current_symbol) and not egalite(grille,current_symbol):
-        print_grid(grille)
-        place_choix(current_player,current_symbol,grille)
-        if is_won(grille,current_symbol):
-            affiche_victoire(current_player,grille)
-        elif egalite(grille,current_symbol):
-            affiche_egalite(grille)
+    while not is_won(grid,current_symbol) and not is_a_draw(grid,current_symbol):
+        print_grid(grid)
+        place_choice(current_player,current_symbol,grid)
+        if is_won(grid,current_symbol):
+            print_win_message(current_player,grid)
+        elif is_a_draw(grid,current_symbol):
+            print_draw_message(grid)
         else:
-            current_player=change_joueur(current_symbol,player_o,player_x)[0]
-            current_symbol=change_joueur(current_symbol,player_o,player_x)[1]
-    print("Merci d'avoir joué !")
+            current_player=change_current_player(current_symbol,player_o,player_x)[0]
+            current_symbol=change_current_player(current_symbol,player_o,player_x)[1]
+    print("Thank you for playing !")
     
 
 
