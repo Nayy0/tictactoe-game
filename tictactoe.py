@@ -5,7 +5,7 @@
 ####################
 
 #print the grid with symbols
-def affiche_grille(grille:list[str])->None:
+def print_grid(grille:list[str])->None:
     """
     Precondition : lenght of grille is 9
     """
@@ -17,9 +17,9 @@ def affiche_grille(grille:list[str])->None:
     print(" "+grille[6]+" | "+grille[7]+" | "+grille[8]+ " ")
 
 #print a numbered grid
-def affiche_grille_numerote()->None:
+def print_grid_numbered()->None:
 
-    print("Les positions sont numérotées ainsi :")
+    print("Positions are numbered like this:")
     print(" 1 | 2 | 3 ")
     print("---+---+---")
     print(" 4 | 5 | 6 ")
@@ -27,24 +27,24 @@ def affiche_grille_numerote()->None:
     print(" 7 | 8 | 9 ")
 
 #return True if 3 symboles are aligned in the grid
-def est_gagne(grille, symbole)->bool:
+def is_won(grille, symbole)->bool:
     """ 
     Precondition : lenght of grille is 9
     symbole est "X" ou "O"
     Examples :
-    $$$ est_gagne(["X","X","X","O"," ","O"," ","O"," "],"X")
+    $$$ is_won(["X","X","X","O"," ","O"," ","O"," "],"X")
     True
-    $$$ est_gagne(["X","O","O","X","X","X","O","O","X"],"X")
+    $$$ is_won(["X","O","O","X","X","X","O","O","X"],"X")
     True
-    $$$ est_gagne([" ","O","O","X","O"," ","X","X","X"],"X")
+    $$$ is_won([" ","O","O","X","O"," ","X","X","X"],"X")
     True
-    $$$ est_gagne(["X","O","O","X","O"," ","X"," "," "],"X")
+    $$$ is_won(["X","O","O","X","O"," ","X"," "," "],"X")
     True
-    $$$ est_gagne(["X","O","O","X","O"," ","X"," "," "],"X")
+    $$$ is_won(["X","O","O","X","O"," ","X"," "," "],"X")
     True
-    $$$ est_gagne([" ","X","O","X","X"," ","X","X"," "],"X")
+    $$$ is_won([" ","X","O","X","X"," ","X","X"," "],"X")
     True
-    $$$ est_gagne([" "," "," "," "," "," "," "," "," "],"X")
+    $$$ is_won([" "," "," "," "," "," "," "," "," "],"X")
     False
     """
     combinaisons=[[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7]\
@@ -57,18 +57,18 @@ def est_gagne(grille, symbole)->bool:
     
 
 #input the name of the players and return a tuple
-def saisie_pseudo()->tuple[str,str]:
+def pseudo_input()->tuple[str,str]:
 
-    joueur_x=input("Entrez le pseudo du joueur X : ")
-    joueur_o=input("Entrez le pseudo du joueur O : ")
-    while joueur_x == joueur_o:
-        print("Pseudo déjà utilisé, entrez un pseudo différent.")
-        joueur_o=input("Entrez le pseudo du joueur O: ")
-    return (joueur_x,joueur_o)
+    player_x=input("Entrez le pseudo du joueur X : ")
+    player_o=input("Entrez le pseudo du joueur O : ")
+    while player_x == player_o:
+        print("The pseudo is already used, enter a different one.")
+        player_o=input("Enter player 0 's pseudo")
+    return (player_x,player_o)
 
 #input function of the choice
-def saisie_choix(joueur_courant,symbole_courant)->str:
-    return input(joueur_courant+" ("+symbole_courant+")"+" choisissez une case (1-9) : ")    
+def saisie_choix(current_player,current_symbol)->str:
+    return input(current_player+" ("+current_symbol+")"+" choisissez une case (1-9) : ")    
 
 #return True if the choice is valid
 def est_valide(choix:str)->bool:
@@ -82,72 +82,76 @@ def est_libre(grille:list[str],position:int):
     return grille[position]==" "
 
 #place the symbole of the player in the grid
-def place_choix(joueur_courant,symbole_courant,grille):
+def place_choix(current_player,current_symbol,grille):
 
-    choix=saisie_choix(joueur_courant,symbole_courant)
+    choix=saisie_choix(current_player,current_symbol)
     
     while not est_valide(choix):
         print("Entrez invalide. Réessayez.")
-        choix=saisie_choix(joueur_courant,symbole_courant)
+        choix=saisie_choix(current_player,current_symbol)
     
     position=int(choix)-1
     
     while not est_libre(grille,position):
         print("Case déjà prise. Réessayez.")        
-        choix=saisie_choix(joueur_courant,symbole_courant)
+        choix=saisie_choix(current_player,current_symbol)
         position=int(choix)-1
     
-    grille[position]=symbole_courant
+    grille[position]=current_symbol
 
 #return True if the game is a draw
 def egalite(grille, symbole):
 
-    return (" " not in grille) and not est_gagne(grille,symbole)
+    return (" " not in grille) and not is_won(grille,symbole)
 
 #Changes the current player. Returns void
-def change_joueur(symbole_courant :str, joueur_o:str,joueur_x:str)->tuple[str]:
-    if symbole_courant=="X":
-        symbole_courant="O"
-        joueur_courant=joueur_o
+def change_joueur(current_symbol :str, player_o:str,player_x:str)->tuple[str]:
+    if current_symbol=="X":
+        current_symbol="O"
+        current_player=player_o
     else:
-        symbole_courant="X"
-        joueur_courant=joueur_x
-    return (joueur_courant,symbole_courant)
+        current_symbol="X"
+        current_player=player_x
+    return (current_player,current_symbol)
 
 #print a win message
-def affiche_victoire(joueur_courant:str,grille:list[str])->None:
+def affiche_victoire(current_player:str,grille:list[str])->None:
     
 
-    affiche_grille(grille)
-    print("Félicitations, "+joueur_courant+" a remporté la partie !")
+    print_grid(grille)
+    print("Félicitations, "+current_player+" a remporté la partie !")
 
 #print a draw message
 def affiche_egalite(grille:list[str])->None:
     
-    affiche_grille(grille)
+    print_grid(grille)
     print("Egalité! Il n'y a plus de case")
 
 #the main function
 def main()->None:
+
+    # game set up
     grille=[" "]*9
-    symbole_courant="X"
-    print("Bonjour, bienvenue dans le jeu du Tictactoe !")
-    joueurs=saisie_pseudo()
-    joueur_x=joueurs[0]
-    joueur_o=joueurs[1]
-    joueur_courant=joueur_x
-    affiche_grille_numerote()
-    
-    while not est_gagne(grille,symbole_courant) and not egalite(grille,symbole_courant):
-        affiche_grille(grille)
-        place_choix(joueur_courant,symbole_courant,grille)
-        if est_gagne(grille,symbole_courant):
-            affiche_victoire(joueur_courant,grille)
-        elif egalite(grille,symbole_courant):
+    current_symbol="X"
+    print("Hello, welcome in the Tictactoe game !")
+    joueurs=pseudo_input()
+    player_x=joueurs[0]
+    player_o=joueurs[1]
+    current_player=player_x
+    print_grid_numbered()
+    print("\n\n")
+
+    #main loop of the game
+    while not is_won(grille,current_symbol) and not egalite(grille,current_symbol):
+        print_grid(grille)
+        place_choix(current_player,current_symbol,grille)
+        if is_won(grille,current_symbol):
+            affiche_victoire(current_player,grille)
+        elif egalite(grille,current_symbol):
             affiche_egalite(grille)
         else:
-            joueur_courant=change_joueur(symbole_courant,joueur_o,joueur_x)[0]
-            symbole_courant=change_joueur(symbole_courant,joueur_o,joueur_x)[1]
+            current_player=change_joueur(current_symbol,player_o,player_x)[0]
+            current_symbol=change_joueur(current_symbol,player_o,player_x)[1]
     print("Merci d'avoir joué !")
     
 
