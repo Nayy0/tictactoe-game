@@ -1,7 +1,7 @@
 # Tictactoe
 A python file to play tictactoe on the terminal. Two players can play against each other.
 
-## Presentation of the repository
+## Presentation of the project
 
 Originaly, the ```tictactoe.py``` file was my final project of my first semester at the Université de Lille. I translated the variables and functions' name in english. I also documented a bit more than the original project.
 
